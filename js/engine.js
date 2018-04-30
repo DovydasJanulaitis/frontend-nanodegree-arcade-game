@@ -1,3 +1,5 @@
+/*jshint esversion: 6 */
+
 /* Engine.js
  * This file provides the game loop functionality (update entities and render),
  * draws the initial game board on the screen, and then calls the update and
@@ -94,6 +96,8 @@ var Engine = (function(global) {
             enemy.update(dt);
         });
         player.update();
+
+        rocks.forEach(rock => rock.update(dt));
     }
 
     /* This function initially draws the "game level", it will then call
@@ -108,10 +112,10 @@ var Engine = (function(global) {
          */
         var rowImages = [
                 'images/water-block.png',   // Top row is water
-                'images/stone-block.png',   // Row 1 of 3 of stone
-                'images/stone-block.png',   // Row 2 of 3 of stone
-                'images/stone-block.png',   // Row 3 of 3 of stone
-                'images/stone-block.png',
+                'images/stone-block.png',   // Row 1 of 4 of stone
+                'images/stone-block.png',   // Row 2 of 4 of stone
+                'images/stone-block.png',   // Row 3 of 4 of stone
+                'images/stone-block.png',   // Row 4 of 4 of stone
                 'images/grass-block.png',   // Row 1 of 2 of grass
                 'images/grass-block.png'    // Row 2 of 2 of grass
             ],
@@ -155,6 +159,8 @@ var Engine = (function(global) {
         });
 
         player.render();
+
+        rocks.forEach(rock => rock.render());
     }
 
     /* This function does nothing but it could have been a good place to
@@ -174,7 +180,8 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
-        'images/char-boy.png'
+        'images/char-boy.png',
+        'images/Rock.png',
     ]);
     Resources.onReady(init);
 

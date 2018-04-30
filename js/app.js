@@ -75,6 +75,18 @@ Player.prototype.handleInput = function(keyboardPress) {
   }
 };
 
+const Rock = function (x, y) {
+  this.x = x;
+  this.y = y;
+  this.rock = 'images/Rock.png';
+};
+
+Rock.prototype.update = function(dt) {};
+
+Rock.prototype.render = function() {
+  ctx.drawImage(Resources.get(this.rock), this.x, this.y);
+};
+
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 const allEnemies = [];
@@ -86,6 +98,16 @@ enemyYLocation.forEach(yCordinate => {
   enemy = new Enemy(0, yCordinate, (Math.random() * 300) + 300);
   allEnemies.push(enemy);
 });
+
+// first element of array are x cordinates
+// second element of array are y cordinates
+const rockLocations = [[3, 103, 203, 303, 403], [320, 235, 150, 65]];
+
+const rocks =[];
+
+for(let numOfRock = 3; numOfRock > 0; numOfRock--) {
+  rocks[numOfRock] = new Rock(rockLocations[0][randomNumber(5)], rockLocations[1][randomNumber(4)]);
+}
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
@@ -99,3 +121,9 @@ document.addEventListener('keyup', function(e) {
 
     player.handleInput(allowedKeys[e.keyCode]);
 });
+
+// function for a random number within a range
+
+function randomNumber (num) {
+  return Math.floor(Math.random() * num);
+}
