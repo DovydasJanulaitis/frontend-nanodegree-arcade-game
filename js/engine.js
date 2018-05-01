@@ -20,6 +20,8 @@ var Engine = (function(global) {
      * create the canvas element, grab the 2D context for that canvas
      * set the canvas elements height/width and add it to the DOM.
      */
+     // Create rock objects
+     createRocs();
     var doc = global.document,
         win = global.window,
         canvas = doc.createElement('canvas'),

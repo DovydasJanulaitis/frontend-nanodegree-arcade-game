@@ -95,6 +95,9 @@ Player.prototype.handleInput = function(keyboardPress) {
         setTimeout(() => {
           this.x = 203;
           this.y = 405;
+          // When player wins replace all rock objects on canvas
+          rocks = [];
+          createRocs();
         }, 200);
       }
     }
@@ -142,14 +145,17 @@ const rockLocations = [[3, 103, 203, 303, 403], [310, 225, 140, 55]];
 
 // rocks array will store all rock objects that are rendered by
 // engine.js file
-const rocks =[];
+let rocks =[];
 
-// loop creates 3 rock objects and places them
+// Function creates 3 rock objects and places them
 // randomly on the game canvas. For loop uses randomNumber function
 // to randomly place rock objects on the canvas. Below method will place
-// new instance of Rock object to rocks array so push() method is not needed
-for(let numOfRock = 3; numOfRock > 0; numOfRock--) {
-  rocks[numOfRock] = new Rock(rockLocations[0][randomNumber(5)], rockLocations[1][randomNumber(4)]);
+// new instance of Rock object to rocks array so push() method is not needed.
+// createRocs function is also placed in engine.js file
+function createRocs() {
+  for(let numOfRock = 3; numOfRock > 0; numOfRock--) {
+    rocks[numOfRock] = new Rock(rockLocations[0][randomNumber(5)], rockLocations[1][randomNumber(4)]);
+  }
 }
 
 // rockCordinates array is used to store cordinates of all created rock objects
@@ -159,7 +165,7 @@ let rockCordinates = [];
 // that were created in the for loop. Sum of cordinates is used to provide unique
 // identifier to each rock object
 rocks.forEach(function(rock){
-  rockCordinates.push(rock["x"] + rock["y"]);
+  rockCordinates.push(rock['x'] + rock['y']);
 });
 
 // This listens for key presses and sends the keys to your
