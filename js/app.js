@@ -25,14 +25,14 @@ Enemy.prototype.update = function(dt) {
       this.x = -20;
       this.speed = (Math.random() * 300) + 300;
     }
-
-    if(this.x + 50 > player.x &&
-    player.x + 50 > this.x &&
-    this.y + 30 > player.y &&
-    player.y + 30 > this.y) {
-      player.x = 203;
-      player.y = 405;
-    }
+    //
+    // if(this.x + 50 > player.x &&
+    // player.x + 50 > this.x &&
+    // this.y + 30 > player.y &&
+    // player.y + 30 > this.y) {
+    //   player.x = 203;
+    //   player.y = 405;
+    // }
 };
 
 // Draw the enemy on the screen, required method for game
@@ -50,7 +50,9 @@ const Player = function(x, y) {
   this.player = 'images/char-boy.png';
 };
 
-Player.prototype.update = function(dt) {};
+Player.prototype.update = function(dt) {
+
+};
 
 Player.prototype.render = function() {
   ctx.drawImage(Resources.get(this.player), this.x, this.y);
@@ -59,19 +61,30 @@ Player.prototype.render = function() {
 Player.prototype.handleInput = function(keyboardPress) {
   if(keyboardPress === 'left' && this.x > 3) {
     this.x-= 100;
+    console.log(this.x);
   } else if (keyboardPress === 'right' && this.x < 403) {
     this.x+= 100;
+    console.log(this.x);
   } else if (keyboardPress === 'up' && this.y > -20) {
-    this.y-= 85;
-    console.log(this.y);
-    if(this.y === -20) {
-      setTimeout(() => {
-        this.x = 203;
-        this.y = 405;
-      }, 200);
+    if(usedRockY.indexOf(this.y - 95) !== -1 && usedRockX.indexOf(this.x) !== -1) {
+      this.y+= 0;
+    } else {
+      this.y-= 85;
+      console.log(this.y);
+      if(this.y === -20) {
+        setTimeout(() => {
+          this.x = 203;
+          this.y = 405;
+        }, 200);
+      }
     }
   } else if (keyboardPress === 'down' && this.y < 490) {
-    this.y+= 85;
+    if(usedRockY.indexOf(this.y + 75) !== -1 && usedRockX.indexOf(this.x) !== -1) {
+      this.y+= 0;
+    } else {
+      this.y+= 85;
+      console.log(this.y);
+    }
   }
 };
 
@@ -99,15 +112,33 @@ enemyYLocation.forEach(yCordinate => {
   allEnemies.push(enemy);
 });
 
-// first element of array are x cordinates
-// second element of array are y cordinates
-const rockLocations = [[3, 103, 203, 303, 403], [320, 235, 150, 65]];
+// rockLocations array stores values of rock on the canvas
+// First nested array stores x cordinates
+// Second nested array stores y cordinates
+const rockLocations = [[3, 103, 203, 303, 403], [310, 225, 140, 55]];
 
+// rocks array will store all rock objects that are rendered by
+// engine.js file
 const rocks =[];
 
+// loop creates 3 rock objects and places them
+// randomly on the game canvas. For loop uses randomNumber function
+// to randomly place rock objects on the canvas
 for(let numOfRock = 3; numOfRock > 0; numOfRock--) {
   rocks[numOfRock] = new Rock(rockLocations[0][randomNumber(5)], rockLocations[1][randomNumber(4)]);
 }
+
+// arrays are used to store x and y cordinates of rock
+// objects that were rendered
+let usedRockX = [];
+let usedRockY = [];
+
+// Below function extracts x and y cordinates from rock objects
+// that were created in the for loop
+rocks.forEach(function(rock){
+  usedRockX.push(rock["x"]);
+  usedRockY.push(rock["y"]);
+});
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
@@ -122,8 +153,8 @@ document.addEventListener('keyup', function(e) {
     player.handleInput(allowedKeys[e.keyCode]);
 });
 
-// function for a random number within a range
-
+// function for a random number within a range. Function is used to create
+// random location for rocks on the grid
 function randomNumber (num) {
   return Math.floor(Math.random() * num);
 }
