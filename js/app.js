@@ -21,11 +21,17 @@ Enemy.prototype.update = function(dt) {
     // all computers.
     this.x+= this.speed * dt;
 
+    // When enemy oversteps visible border of canvas
+    // restart that enemy at the beginning of canvas
+    // and apply random speed
     if(this.x > 500) {
       this.x = -20;
       this.speed = (Math.random() * 300) + 300;
     }
-    
+
+    // Player and enemy collision functionality:
+    // if player touches enemy, restart the player
+    // and the starting location
     if(this.x + 50 > player.x &&
     player.x + 50 > this.x &&
     this.y + 30 > player.y &&
@@ -42,43 +48,49 @@ Enemy.prototype.render = function() {
 
 // Now write your own player class
 // This class requires an update(), render() and
-// a handleInput() method.
-
+// a handleInput() method
 const Player = function(x, y) {
   this.x = x;
   this.y = y;
   this.player = 'images/char-boy.png';
 };
 
-Player.prototype.update = function(dt) {
+Player.prototype.update = function(dt) {};
 
-};
-
+// Draw the player on the screen, required method for game
 Player.prototype.render = function() {
   ctx.drawImage(Resources.get(this.player), this.x, this.y);
 };
 
+// Handle player movement on click of arrow keys and
+// handle player - rock collision
 Player.prototype.handleInput = function(keyboardPress) {
+  // Check if player clicks the left arrow key and if player
+  // is not breaching left border of the canvas. All other arrow
+  // keys are using the same logic pattern
   if(keyboardPress === 'left' && this.x > 3) {
+    // Check if current player cordinates match cordinates
+    // of the closest stone. If yes, do not allow movement in
+    // required direction. If no, allow movement in required direction
+    // All other arrow keys below use the same logic pattern
     if(rockCordinates.indexOf(this.y - 10 + this.x - 100) !== -1) {
       this.x+= 0;
     } else {
       this.x-= 100;
-      console.log(this.x);
     }
   } else if (keyboardPress === 'right' && this.x < 403) {
     if(rockCordinates.indexOf(this.y - 10 + this.x + 100) !== -1) {
       this.x+= 0;
     } else {
       this.x+= 100;
-      console.log(this.x);
     }
   } else if (keyboardPress === 'up' && this.y > -20) {
     if(rockCordinates.indexOf(this.y - 95 + this.x) !== -1) {
       this.y+= 0;
     } else {
       this.y-= 85;
-      console.log(this.y);
+      // If player wins (reaches the highest row on canvas), move player to
+      // the starting location with small delay
       if(this.y === -20) {
         setTimeout(() => {
           this.x = 203;
@@ -91,11 +103,11 @@ Player.prototype.handleInput = function(keyboardPress) {
       this.y+= 0;
     } else {
       this.y+= 85;
-      console.log(this.y);
     }
   }
 };
 
+// Create Rock class. Necessary adjustments in engine.js file also made
 const Rock = function (x, y) {
   this.x = x;
   this.y = y;
@@ -111,10 +123,13 @@ Rock.prototype.render = function() {
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 const allEnemies = [];
+// Create array to provide y cordinate for each enemy object
 const enemyYLocation = [63, 147, 230, 310];
 // Place the player object in a variable called player
 const player = new Player(203, 490);
 
+// Create enemy objects and provide y cordinates stored in the
+// enemyYLocation array
 enemyYLocation.forEach(yCordinate => {
   enemy = new Enemy(0, yCordinate, (Math.random() * 300) + 300);
   allEnemies.push(enemy);
@@ -131,17 +146,18 @@ const rocks =[];
 
 // loop creates 3 rock objects and places them
 // randomly on the game canvas. For loop uses randomNumber function
-// to randomly place rock objects on the canvas
+// to randomly place rock objects on the canvas. Below method will place
+// new instance of Rock object to rocks array so push() method is not needed
 for(let numOfRock = 3; numOfRock > 0; numOfRock--) {
   rocks[numOfRock] = new Rock(rockLocations[0][randomNumber(5)], rockLocations[1][randomNumber(4)]);
 }
 
-// arrays are used to store x and y cordinates of rock
-// objects that were rendered
+// rockCordinates array is used to store cordinates of all created rock objects
 let rockCordinates = [];
 
 // Below function extracts x and y cordinates from rock objects
-// that were created in the for loop
+// that were created in the for loop. Sum of cordinates is used to provide unique
+// identifier to each rock object
 rocks.forEach(function(rock){
   rockCordinates.push(rock["x"] + rock["y"]);
 });
@@ -159,7 +175,7 @@ document.addEventListener('keyup', function(e) {
     player.handleInput(allowedKeys[e.keyCode]);
 });
 
-// function for a random number within a range. Function is used to create
+// Function for a random number. Function is used to create
 // random location for rocks on the grid
 function randomNumber (num) {
   return Math.floor(Math.random() * num);
