@@ -25,14 +25,14 @@ Enemy.prototype.update = function(dt) {
       this.x = -20;
       this.speed = (Math.random() * 300) + 300;
     }
-    //
-    // if(this.x + 50 > player.x &&
-    // player.x + 50 > this.x &&
-    // this.y + 30 > player.y &&
-    // player.y + 30 > this.y) {
-    //   player.x = 203;
-    //   player.y = 405;
-    // }
+    
+    if(this.x + 50 > player.x &&
+    player.x + 50 > this.x &&
+    this.y + 30 > player.y &&
+    player.y + 30 > this.y) {
+      player.x = 203;
+      player.y = 405;
+    }
 };
 
 // Draw the enemy on the screen, required method for game
@@ -60,13 +60,21 @@ Player.prototype.render = function() {
 
 Player.prototype.handleInput = function(keyboardPress) {
   if(keyboardPress === 'left' && this.x > 3) {
-    this.x-= 100;
-    console.log(this.x);
+    if(rockCordinates.indexOf(this.y - 10 + this.x - 100) !== -1) {
+      this.x+= 0;
+    } else {
+      this.x-= 100;
+      console.log(this.x);
+    }
   } else if (keyboardPress === 'right' && this.x < 403) {
-    this.x+= 100;
-    console.log(this.x);
+    if(rockCordinates.indexOf(this.y - 10 + this.x + 100) !== -1) {
+      this.x+= 0;
+    } else {
+      this.x+= 100;
+      console.log(this.x);
+    }
   } else if (keyboardPress === 'up' && this.y > -20) {
-    if(usedRockY.indexOf(this.y - 95) !== -1 && usedRockX.indexOf(this.x) !== -1) {
+    if(rockCordinates.indexOf(this.y - 95 + this.x) !== -1) {
       this.y+= 0;
     } else {
       this.y-= 85;
@@ -79,7 +87,7 @@ Player.prototype.handleInput = function(keyboardPress) {
       }
     }
   } else if (keyboardPress === 'down' && this.y < 490) {
-    if(usedRockY.indexOf(this.y + 75) !== -1 && usedRockX.indexOf(this.x) !== -1) {
+    if(rockCordinates.indexOf(this.y + 75 + this.x) !== -1) {
       this.y+= 0;
     } else {
       this.y+= 85;
@@ -130,14 +138,12 @@ for(let numOfRock = 3; numOfRock > 0; numOfRock--) {
 
 // arrays are used to store x and y cordinates of rock
 // objects that were rendered
-let usedRockX = [];
-let usedRockY = [];
+let rockCordinates = [];
 
 // Below function extracts x and y cordinates from rock objects
 // that were created in the for loop
 rocks.forEach(function(rock){
-  usedRockX.push(rock["x"]);
-  usedRockY.push(rock["y"]);
+  rockCordinates.push(rock["x"] + rock["y"]);
 });
 
 // This listens for key presses and sends the keys to your
