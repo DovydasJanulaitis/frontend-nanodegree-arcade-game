@@ -95,7 +95,7 @@ Player.prototype.handleInput = function(keyboardPress) {
         setTimeout(() => {
           this.x = 203;
           this.y = 405;
-          // When player wins replace all rock objects on canvas
+          // When player wins randomly replace all rock objects on canvas
           rocks = [];
           createRocs();
         }, 200);
@@ -138,7 +138,7 @@ enemyYLocation.forEach(yCordinate => {
   allEnemies.push(enemy);
 });
 
-// rockLocations array stores values of rock on the canvas
+// rockLocations array stores values of rock objects on the canvas
 // First nested array stores x cordinates
 // Second nested array stores y cordinates
 const rockLocations = [[3, 103, 203, 303, 403], [310, 225, 140, 55]];
@@ -147,9 +147,8 @@ const rockLocations = [[3, 103, 203, 303, 403], [310, 225, 140, 55]];
 // engine.js file
 let rocks =[];
 
-// Function creates 3 rock objects and places them
-// randomly on the game canvas. For loop uses randomNumber function
-// to randomly place rock objects on the canvas. Below method will place
+// Function creates 3 rock objects and gives them
+// random combination of x and y cordinates. Below method will place
 // new instance of Rock object to rocks array so push() method is not needed.
 // createRocs function is also placed in engine.js file
 function createRocs() {
@@ -162,8 +161,8 @@ function createRocs() {
 let rockCordinates = [];
 
 // Below function extracts x and y cordinates from rock objects
-// that were created in the for loop. Sum of cordinates is used to provide unique
-// identifier to each rock object
+// that were created by createRocs function. Sum of cordinates is used to provide 
+// unique identifier to each rock object
 rocks.forEach(function(rock){
   rockCordinates.push(rock['x'] + rock['y']);
 });
